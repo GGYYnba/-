@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>房貸試算</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* 淺灰色背景 */
+        }
+        input:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100 p-4 flex items-center justify-center font-sans">
+    <div class="w-full max-w-2xl p-8 bg-white rounded-xl shadow-2xl">
+        <h1 class="text-4xl font-extrabold text-center text-cyan-700 mb-6">
+            易洲幫您試算房貸
+        </h1>
+        <p class="text-gray-600 text-center mb-8">
+            輸入您的房貸資訊，即可快速計算每月還款金額。
+        </p>
+
+        <!-- 房貸試算表單 -->
+        <form id="loanForm" class="space-y-6">
+            <!-- 房貸金額 Input (已改為萬) -->
+            <div>
+                <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-1">
+                    房貸金額 (萬)
+                </label>
+                <div class="relative">
+                    <input
+                        type="number"
+                        id="loanAmount"
+                        placeholder="例如: 800"
+                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                        required
+                    />
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote text-gray-400"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 年利率 Input (已設定預設值) -->
+            <div>
+                <label for="interestRate" class="block text-sm font-medium text-gray-700 mb-1">
+                    年利率 (%)
+                </label>
+                <div class="relative">
+                    <input
+                        type="number"
+                        step="0.01"
+                        id="interestRate"
+                        placeholder="例如: 1.6"
+                        value="1.6"
+                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                        required
+                    />
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-percent text-gray-400"><path d="M19 5L5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 還款年限 Select (已改為選單) -->
+            <div>
+                <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-1">
+                    還款年限 (年)
+                </label>
+                <div class="relative">
+                    <select
+                        id="loanTerm"
+                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                        required
+                    >
+                        <option value="20">20 年</option>
+                        <option value="30" selected>30 年</option>
+                        <option value="40">40 年</option>
+                    </select>
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days text-gray-400"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 試算按鈕 -->
+            <button
+                type="submit"
+                class="w-full py-3 px-4 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors text-lg"
+            >
+                試算每月還款金額
+            </button>
+        </form>
+
+        <!-- 顯示結果/錯誤訊息的區域 -->
+        <div id="messageArea"></div>
+    </div>
+
+    <script>
+        const loanForm = document.getElementById('loanForm');
+        const loanAmountInput = document.getElementById('loanAmount');
+        const interestRateInput = document.getElementById('interestRate');
+        const loanTermInput = document.getElementById('loanTerm');
+        const messageArea = document.getElementById('messageArea');
+
+        loanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Clear previous message
+            messageArea.innerHTML = '';
+
+            // Convert string inputs to numbers and multiply loanAmount by 10000
+            const principal = parseFloat(loanAmountInput.value) * 10000;
+            const rate = parseFloat(interestRateInput.value) / 100 / 12; // Monthly interest rate
+            const term = parseFloat(loanTermInput.value) * 12; // Total number of payments
+
+            // Input validation
+            if (isNaN(principal) || isNaN(rate) || isNaN(term) || principal <= 0 || rate <= 0 || term <= 0) {
+                messageArea.innerHTML = `
+                    <div class="mt-6 p-4 bg-red-100 text-red-700 border border-red-400 rounded-lg text-center">
+                        請輸入有效的數字且數值需大於零。
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculation logic for monthly payment
+            const monthly = principal * (rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+
+            // Display result
+            messageArea.innerHTML = `
+                <div class="mt-8 p-6 bg-cyan-50 rounded-xl border-2 border-cyan-200 text-center">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">
+                        每月還款金額：
+                    </h2>
+                    <p class="text-5xl font-extrabold text-cyan-600">
+                        NT$${monthly.toFixed(2)}
+                    </p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
