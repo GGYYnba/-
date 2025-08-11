@@ -74,17 +74,19 @@
                     還款年限 (年)
                 </label>
                 <div class="relative">
+                    <!-- 修正: 調整 select 樣式，使其在圖示下方 -->
                     <select
                         id="loanTerm"
-                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors appearance-none"
                         required
                     >
                         <option value="20">20 年</option>
                         <option value="30" selected>30 年</option>
                         <option value="40">40 年</option>
                     </select>
+                    <!-- 修正: 調整圖示顏色，使其更明顯 -->
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days text-gray-400"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days text-gray-600"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
                     </div>
                 </div>
             </div>
@@ -134,12 +136,13 @@
             const monthly = principal * (rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
 
             // Display result
+            // 修正: 調整字體大小為 text-4xl，並在 mobile 上使用 text-3xl 以避免超框
             messageArea.innerHTML = `
                 <div class="mt-8 p-6 bg-cyan-50 rounded-xl border-2 border-cyan-200 text-center">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">
                         每月還款金額：
                     </h2>
-                    <p class="text-5xl font-extrabold text-cyan-600">
+                    <p class="text-4xl sm:text-5xl font-extrabold text-cyan-600 break-words">
                         NT$${monthly.toFixed(2)}
                     </p>
                 </div>
@@ -148,4 +151,3 @@
     </script>
 </body>
 </html>
-
