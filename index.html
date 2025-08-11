@@ -3,154 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>房貸試算</title>
-    <!-- 引入 Tailwind CSS CDN -->
+    <title>房貸試算工具</title>
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* 淺灰色背景 */
-        }
-        input:focus {
-            outline: none;
-            border-color: #06b6d4;
-        }
-        /* 調整 select 樣式，使其圖示能夠正常顯示 */
-        select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            background-color: #f3f4f6;
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-100 p-4 flex items-center justify-center font-sans">
-    <div class="w-full max-w-2xl p-8 bg-white rounded-xl shadow-2xl">
-        <h1 class="text-4xl font-extrabold text-center text-cyan-700 mb-6">
-            易洲幫您試算房貸
-        </h1>
-        <p class="text-gray-600 text-center mb-8">
-            輸入您的房貸資訊，即可快速計算每月還款金額。
-        </p>
+<body class="flex items-center justify-center min-h-screen p-4">
 
-        <!-- 房貸試算表單 -->
-        <form id="loanForm" class="space-y-6">
-            <!-- 房貸金額 Input (已改為萬) -->
+    <!-- Calculator Container -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">易洲幫您試算房貸</h1>
+        <p class="text-center text-gray-600 mb-8">輕鬆試算每月還款金額與總利息</p>
+
+        <!-- Input Fields Section -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
             <div>
-                <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-1">
-                    房貸金額 (萬)
-                </label>
-                <div class="relative">
-                    <input
-                        type="number"
-                        id="loanAmount"
-                        placeholder="例如: 800"
-                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
-                        required
-                    />
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote text-gray-400"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/></svg>
-                    </div>
-                </div>
+                <label for="loanAmount" class="block text-gray-700 font-medium mb-2">房貸金額 (萬元)</label>
+                <input type="number" id="loanAmount" value="800" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
             </div>
-
-            <!-- 年利率 Input (已設定預設值) -->
             <div>
-                <label for="interestRate" class="block text-sm font-medium text-gray-700 mb-1">
-                    年利率 (%)
-                </label>
-                <div class="relative">
-                    <input
-                        type="number"
-                        step="0.01"
-                        id="interestRate"
-                        placeholder="例如: 1.6"
-                        value="1.6"
-                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
-                        required
-                    />
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-percent text-gray-400"><path d="M19 5L5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
-                    </div>
-                </div>
+                <label for="interestRate" class="block text-gray-700 font-medium mb-2">年利率 (%)</label>
+                <input type="number" id="interestRate" value="2.185" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
             </div>
-
-            <!-- 還款年限 Select -->
             <div>
-                <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-1">
-                    還款年限 (年)
-                </label>
-                <div class="relative">
-                    <select
-                        id="loanTerm"
-                        class="w-full p-3 pl-12 pr-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
-                        required
-                    >
-                        <option value="20">20 年</option>
-                        <option value="30" selected>30 年</option>
-                        <option value="40">40 年</option>
-                    </select>
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days text-gray-600"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-                    </div>
-                </div>
+                <label for="loanTerm" class="block text-gray-700 font-medium mb-2">還款年限 (年)</label>
+                <select id="loanTerm" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    <option value="20">20 年</option>
+                    <option value="30" selected>30 年</option>
+                    <option value="40">40 年</option>
+                </select>
             </div>
+        </div>
 
-            <!-- 試算按鈕 -->
-            <button
-                type="submit"
-                class="w-full py-3 px-4 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors text-lg"
-            >
-                試算每月還款金額
+        <!-- Calculate Button -->
+        <div class="text-center">
+            <button id="calculateBtn" class="w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-md">
+                開始試算
             </button>
-        </form>
+        </div>
 
-        <!-- 顯示結果/錯誤訊息的區域 -->
-        <div id="messageArea"></div>
+        <!-- Results Section -->
+        <div id="results" class="mt-10 p-6 bg-blue-50 rounded-2xl border border-blue-200 hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">試算結果</h2>
+            <div class="grid sm:grid-cols-3 gap-6 text-center items-end">
+                <!-- 每月還款金額 -->
+                <div class="p-4 bg-white rounded-xl shadow-sm border border-blue-100 flex flex-col justify-between h-40">
+                    <p class="text-sm text-gray-500">每月還款金額</p>
+                    <div class="mt-auto">
+                        <span id="monthlyPaymentCurrency" class="text-xl font-bold text-blue-600">NT$</span>
+                        <span id="monthlyPaymentValue" class="text-4xl font-bold text-blue-600 block">--</span>
+                    </div>
+                </div>
+                <!-- 總支付利息 -->
+                <div class="p-4 bg-white rounded-xl shadow-sm border border-blue-100 flex flex-col justify-between h-32">
+                    <p class="text-sm text-gray-500">總支付利息</p>
+                    <div class="mt-auto">
+                        <span id="totalInterestCurrency" class="text-base font-bold text-gray-800">NT$</span>
+                        <span id="totalInterestValue" class="text-xl font-bold text-gray-800 block">--</span>
+                    </div>
+                </div>
+                <!-- 總還款金額 -->
+                <div class="p-4 bg-white rounded-xl shadow-sm border border-blue-100 flex flex-col justify-between h-32">
+                    <p class="text-sm text-gray-500">總還款金額</p>
+                    <div class="mt-auto">
+                        <span id="totalRepaymentCurrency" class="text-base font-bold text-gray-800">NT$</span>
+                        <span id="totalRepaymentValue" class="text-xl font-bold text-gray-800 block">--</span>
+                    </div>
+                </div>
+            </div>
+            <p id="errorMessage" class="text-center text-red-500 mt-4 hidden"></p>
+        </div>
     </div>
 
     <script>
-        const loanForm = document.getElementById('loanForm');
+        // DOM 元素選取
         const loanAmountInput = document.getElementById('loanAmount');
         const interestRateInput = document.getElementById('interestRate');
-        const loanTermInput = document.getElementById('loanTerm');
-        const messageArea = document.getElementById('messageArea');
+        const loanTermSelect = document.getElementById('loanTerm');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultsSection = document.getElementById('results');
+        const monthlyPaymentValueElement = document.getElementById('monthlyPaymentValue');
+        const totalInterestValueElement = document.getElementById('totalInterestValue');
+        const totalRepaymentValueElement = document.getElementById('totalRepaymentValue');
+        const errorMessageElement = document.getElementById('errorMessage');
 
-        loanForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        /**
+         * 房貸試算主函式
+         * 使用「本息攤還法」公式進行計算。
+         * 公式: P = L * [ c(1+c)^n ] / [ (1+c)^n - 1 ]
+         * P: 每月還款金額 (Monthly Payment)
+         * L: 貸款總金額 (Loan Amount)
+         * c: 月利率 (Monthly Interest Rate)
+         * n: 總期數 (Total Number of Payments)
+         */
+        function calculateMortgage() {
+            // 取得輸入值，並將房貸金額從「萬元」轉換成「元」
+            const loanAmount = parseFloat(loanAmountInput.value) * 10000;
+            const interestRate = parseFloat(interestRateInput.value);
+            const loanTerm = parseInt(loanTermSelect.value);
 
-            // Clear previous message
-            messageArea.innerHTML = '';
-
-            // Convert string inputs to numbers and multiply loanAmount by 10000
-            const principal = parseFloat(loanAmountInput.value) * 10000;
-            const rate = parseFloat(interestRateInput.value) / 100 / 12; // Monthly interest rate
-            const term = parseFloat(loanTermInput.value) * 12; // Total number of payments
-
-            // Input validation
-            if (isNaN(principal) || isNaN(rate) || isNaN(term) || principal <= 0 || rate <= 0 || term <= 0) {
-                messageArea.innerHTML = `
-                    <div class="mt-6 p-4 bg-red-100 text-red-700 border border-red-400 rounded-lg text-center">
-                        請輸入有效的數字且數值需大於零。
-                    </div>
-                `;
+            // 輸入值驗證
+            if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(loanTerm) || loanAmount <= 0 || interestRate < 0 || loanTerm <= 0) {
+                showError('請輸入有效的數字，且金額與年限必須大於 0。');
                 return;
             }
 
-            // Calculation logic for monthly payment
-            const monthly = principal * (rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+            // 計算月利率和總期數
+            const monthlyRate = (interestRate / 100) / 12;
+            const totalPayments = loanTerm * 12;
 
-            // Display result as a whole number
-            messageArea.innerHTML = `
-                <div class="mt-8 p-6 bg-cyan-50 rounded-xl border-2 border-cyan-200 text-center">
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">
-                        每月還款金額：
-                    </h2>
-                    <p class="text-4xl sm:text-5xl font-extrabold text-cyan-600 break-words">
-                        NT$${Math.round(monthly).toLocaleString()}
-                    </p>
-                </div>
-            `;
-        });
+            let monthlyPayment;
+            if (monthlyRate === 0) {
+                // 特殊情況：年利率為0時，每月只償還本金
+                monthlyPayment = loanAmount / totalPayments;
+            } else {
+                // 應用本息攤還公式
+                monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1);
+            }
+            
+            // 計算總還款金額和總利息
+            const totalRepayment = monthlyPayment * totalPayments;
+            const totalInterest = totalRepayment - loanAmount;
+
+            // 更新顯示結果，並使用 toLocaleString() 格式化數字
+            monthlyPaymentValueElement.textContent = Math.round(monthlyPayment).toLocaleString();
+            totalInterestValueElement.textContent = Math.round(totalInterest).toLocaleString();
+            totalRepaymentValueElement.textContent = Math.round(totalRepayment).toLocaleString();
+
+            // 顯示結果區塊
+            resultsSection.classList.remove('hidden');
+            errorMessageElement.classList.add('hidden');
+        }
+
+        // 錯誤訊息處理
+        function showError(message) {
+            errorMessageElement.textContent = message;
+            errorMessageElement.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        // 事件監聽器
+        calculateBtn.addEventListener('click', calculateMortgage);
     </script>
 </body>
 </html>
